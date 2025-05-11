@@ -21,7 +21,7 @@ A comprehensive, production-ready External Attack Surface Management solution bu
 Deploy the EASM Scanner to Azure in one command using Azure Cloud Shell:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/yourusername/easm-solution/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/DataGuys/DGEASM/main/install.sh | bash
 ```
 
 This will automatically:
@@ -35,8 +35,8 @@ This will automatically:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/easm-solution.git
-cd easm-solution
+git clone git clone https://github.com/DataGuys/DGEASM.git
+cd DGEASM
 ```
 
 2. Install dependencies:
@@ -63,10 +63,10 @@ npm start
 
 ```bash
 # Build the image
-docker build -t easm-solution .
+docker build -t DGEASM .
 
 # Run the container
-docker run -p 3000:3000 easm-solution
+docker run -p 3000:3000 DGEASM
 ```
 
 ### Using Docker Compose
