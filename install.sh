@@ -29,8 +29,8 @@ cd $TEMP_DIR
 
 # Clone the repository
 echo "Cloning EASM Scanner repository..."
-git clone https://github.com/yourusername/easm-solution.git
-cd easm-solution
+git clone git clone https://github.com/DataGuys/DGEASM.git
+cd DGEASM
 
 # Make deployment script executable
 chmod +x ./infra/azure/scripts/deploy.sh
