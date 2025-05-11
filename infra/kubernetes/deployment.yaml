@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easm-scanner
+  labels:
+    app: easm-scanner
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: easm-scanner
+  template:
+    metadata:
+      labels:
+        app: easm-scanner
+    spec:
+      containers:
+      - name: easm-scanner
+        image: ${ACR_LOGIN_SERVER}/easm-scanner:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+        env:
+          - name: NODE_ENV
+            value: "production"
+          - name: PORT
+            value: "3000"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: MAX_CONCURRENCY
+            value: "10"
+          - name: SHODAN_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: easm-scanner-secrets
+                key: SHODAN_API_KEY
+                optional: true
+          - name: SECURITY_TRAILS_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: easm-scanner-secrets
+                key: SECURITY_TRAILS_API_KEY
+                optional: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: easm-scanner
+spec:
+  selector:
+    app: easm-scanner
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer
+---
+# Optional Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: easm-scanner-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: easm-scanner
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70

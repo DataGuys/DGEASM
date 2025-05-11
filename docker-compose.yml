@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  easm-scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: easm-scanner
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - LOG_LEVEL=info
+      - MAX_CONCURRENCY=10
+      # Uncomment and add your API keys if available
+      # - SHODAN_API_KEY=your_shodan_api_key
+      # - CENSYS_API_KEY=your_censys_api_key
+      # - SECURITY_TRAILS_API_KEY=your_security_trails_api_key
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').request('http://localhost:3000/health', { method: 'GET' }, (res) => process.exit(res.statusCode === 200 ? 0 : 1)).end()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
