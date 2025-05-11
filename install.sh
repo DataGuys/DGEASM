@@ -29,7 +29,7 @@ cd $TEMP_DIR
 
 # Clone the repository
 echo "Cloning EASM Scanner repository..."
-git clone git clone https://github.com/DataGuys/DGEASM.git
+git clone https://github.com/DataGuys/DGEASM.git
 cd DGEASM
 
 # Make deployment script executable
